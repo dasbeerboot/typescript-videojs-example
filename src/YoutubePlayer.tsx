@@ -3,13 +3,14 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
+import 'videojs-youtube'
 import 'video.js/dist/video-js.css'
 
-interface VideoPlayeriProps {
+interface YoutubePlayeriProps {
     url: string
   }
 
-const VideoPlayer = ({url}: VideoPlayeriProps) => {
+const YoutubePlayer = ({url}: YoutubePlayeriProps) => {
   const videoJsOptions: VideoJsPlayerOptions = useMemo(() => {
     return {
       autoplay: false,
@@ -23,19 +24,20 @@ const VideoPlayer = ({url}: VideoPlayeriProps) => {
           overrideNative: true,
         },
       },
+      techOrder: ["youtube"],
       sources: [{
-        type: 'application/x-mpegURL',
-        src: url
-    }]
+          type: "video/youtube",
+          src: url
+      }]
     }
-  }, [])
+  }, [url])
   
   const [player, setPlayer] = useState<VideoJsPlayer>()
   const videoJSRef = useRef(null)
 
   useEffect(() => {
     setPlayer(videojs(videoJSRef.current, videoJsOptions))
-    
+
     return () => {
       if (player) {
         player.dispose()
@@ -54,4 +56,4 @@ const VideoPlayer = ({url}: VideoPlayeriProps) => {
   )
 }
 
-export default VideoPlayer
+export default YoutubePlayer
